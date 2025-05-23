@@ -53,13 +53,13 @@ const BottomComponent = styled.div`
 `
 
 const MasterForm = styled.form`
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 600px;
     text-align: center;
     font-size: small;
     display: flex;
     flex-direction: column;
-    /* gap: 5px; */
+    gap: 5px;
 `
 
 const GroupForm = styled.div`
@@ -88,16 +88,57 @@ const StyledLabel = styled.label`
     font-size: 20px;
 `
 
+const ButtonComponent = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    height: 50px;
+    text-align: center;
+    justify-content: center;
+`
+
+const StyledButtonSave = styled.button`
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    height: 30px;
+    width: 70px;
+    font-size: large;
+    font: bold;
+    background-color: green;
+
+    &:hover {
+        background-color: #016901;
+    }
+`
+
+// const StyledButtonDelete = styled.button`
+//     border-radius: 5px;
+//     border: none;
+//     cursor: pointer;
+//     height: 30px;
+//     width: 70px;
+//     font-size: large;
+//     font: bold;
+//     background-color: red;
+
+//     &:hover {
+//         background-color: #d10202;
+//     }
+// `
+
 function Shows() {
     const [isShows, setIsShows] = useState(false);
     const [show, setShow] = useState();
     const [showForm, setShowForm] = useState({
+        showId: "",
         title: "",
         details: {
             author: "",
             genre: "",
             release_date: "",
             description: "",
+            image: ""
         },
         reviews: []
     });
@@ -106,8 +147,8 @@ function Shows() {
         // console.log("Show: ", show);
         setIsShows(true);
         setShow(show);
-        setShowForm({title: show.title, details: {author: show.details.author, genre: show.details.genre, 
-                    release_date: show.details.release_date, description: show.details.description}})
+        setShowForm({showId: show.idShow, title: show.title, details: {author: show.details.author, genre: show.details.genre, 
+                    release_date: show.details.release_date, description: show.details.description, image: show.details.image}})
     }
 
     // function handleChange(e) {
@@ -165,7 +206,12 @@ function Shows() {
                                 <StyledLabel>Description: </StyledLabel>
                                 <StyledInput type="text" name="description" value={showForm.details.description} onChange={handleChange}/>
                             </GroupForm>
+                            <ButtonComponent>
+                                <StyledButtonSave>Save</StyledButtonSave>
+                                {/* <StyledButtonDelete>Delete</StyledButtonDelete> */}
+                            </ButtonComponent>
                         </MasterForm>
+                        <img src={showForm.details.image} style={{height: "300px", width: "200px", objectFit: "cover", borderRadius: "5px"}}></img>
                     </TopComponent>
                     <hr />
                     <BottomComponent></BottomComponent>
