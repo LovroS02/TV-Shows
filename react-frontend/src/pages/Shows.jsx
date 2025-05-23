@@ -207,7 +207,7 @@ function Shows() {
                                 <StyledInput type="text" name="description" value={showForm.details.description} onChange={handleChange}/>
                             </GroupForm>
                             <ButtonComponent>
-                                <StyledButtonSave>Save</StyledButtonSave>
+                                <StyledButtonSave on>Save</StyledButtonSave>
                                 {/* <StyledButtonDelete>Delete</StyledButtonDelete> */}
                             </ButtonComponent>
                         </MasterForm>
