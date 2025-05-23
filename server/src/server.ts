@@ -52,32 +52,44 @@ app.get('/', (req, res) => {
 app.get('/shows', async (req, res) => {
 	try {
 		const shows = await Shows.find();
-		res.status(200).json({ shows: shows });
+		res.status(200).json({ data: shows });
 	} catch (err) {
-		res.status(500).json({ message: 'Error fetching shows' });
+		res.status(500).json({ error: 'Error fetching shows' });
 	}
 });
 
 app.get('/users', async (req, res) => {
 	try {
 		const users = await Users.find();
-		res.status(200).json({ users: users });
+		res.status(200).json({ data: users });
 	} catch (err) {
-		res.status(500).json({ message: 'Error fetching users' });
+		res.status(500).json({ error: 'Error fetching users' });
 	}
 });
 
 app.get('/users/count', async (req, res) => {
 	try {
 		const count = await Users.countDocuments();
-		res.status(200).json({ count: count });
+		res.status(200).json({ data: count });
 	} catch (err) {
 		res.status(500).json({ error: 'Error counting users' });
 	}
 });
 
-app.get('/profile', (req, res) => {
+app.get('/profile/:idUser', async (req, res) => {
+	try {
+		const { idUser } = req.params;
+		const user = await Users.findOne({ idUser: parseInt(idUser) }).select('-password');
 
+		if (user) {
+			res.status(200).json({ data: user });
+		} else {
+			res.status(404).json({ error: 'User not found' });
+		}
+	} catch (err) {
+		console.error('Server error:', err);
+		res.status(500).json({ error: 'Server error' });
+	}
 });
 
 app.post('/login', async (req, res) => {
@@ -86,14 +98,14 @@ app.post('/login', async (req, res) => {
 	const user = await Users.findOne({ email });
 	if (user) {
 		const hashedPassword = user.password;
-		const isMatch = bcrypt.compare(password, hashedPassword);
+		const isMatch = await bcrypt.compare(password, hashedPassword);
 		if (!isMatch) {
-			res.status(400).json({ message: 'Wrong email or password' });
+			res.status(400).json({ error: 'Wrong email or password' });
 		}
 
-		res.status(201).json({ message: 'Successful login!' });
+		res.status(200).json({ data: 'Successful login!' });
 	} else {
-		res.status(401).json({ message: 'Wrong email or password' });
+		res.status(401).json({ error: 'Wrong email or password' });
 	}
 });
 
@@ -139,7 +151,7 @@ app.post('/register', async (req, res) => {
 	try {
 		const userDoc = new Users(newUser);
 		await userDoc.save();
-		res.status(201).json({ message: 'Registration successful' });
+		res.status(201).json({ data: 'Registration successful' });
 	} catch (err) {
 		console.error('DB error:', err);
 		res.status(500).json({ error: 'Error saving user' });
@@ -155,13 +167,13 @@ app.post('/shows/:idShow/reviews', async (req, res) => {
 		if (show) {
 			show.reviews.push(review);
 			await show.save();
-			res.status(201).json({ message: 'Review added', reviews: show.reviews });
+			res.status(201).json({ data: show.reviews });
 		} else {
-			res.status(404).json({ message: 'Show not found' });
+			res.status(404).json({ error: 'Show not found' });
 		}
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ message: 'Server error' });
+		res.status(500).json({ error: 'Server error' });
 	}
 });
 
@@ -173,13 +185,13 @@ app.delete('/shows/:idShow/reviews/:idReview', async (req, res) => {
 		if (show) {
 			show.reviews.splice(parseInt(idReview), 1);
 			await show.save();
-			res.status(201).json({ message: 'Review deleted', reviews: show.reviews });
+			res.status(201).json({ data: show.reviews });
 		} else {
-			res.status(404).json({ message: 'Show not found' });
+			res.status(404).json({ error: 'Show not found' });
 		}
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ message: 'Server error' });
+		res.status(500).json({ error: 'Server error' });
 	}
 });
 
@@ -191,13 +203,13 @@ app.put('/shows/:idShow/reviews/:idReview', async (req, res) => {
 		if (show) {
 			show.reviews[parseInt(idReview)] = review;
 			await show.save();
-			res.json({ message: 'Review updated', reviews: show.reviews });
+			res.status(201).json({ data: show.reviews });
 		} else {
-			res.status(404).json({ message: 'Show not found' });
+			res.status(404).json({ error: 'Show not found' });
 		}
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ message: 'Server error' });
+		res.status(500).json({ error: 'Server error' });
 	}
 });
 
@@ -212,13 +224,13 @@ app.put('/shows/:idShow', async (req, res) => {
 		);
 
 		if (show) {
-			res.json({ message: 'Show updated', show });
+			res.status(201).json({ data: show });
 		} else {
-			res.status(404).json({ message: 'Show not found' });
+			res.status(404).json({ error: 'Show not found' });
 		}
 	} catch (err) {
 		console.error(err);
-		res.status(500).json({ message: 'Server error' });
+		res.status(500).json({ error: 'Server error' });
 	}
 });
 
