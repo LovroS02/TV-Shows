@@ -40,6 +40,22 @@ const StyledImage = styled.img`
     width: 150px;
 `
 
+const StyledButton = styled.button`
+    background-color: green;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    height: 30px;
+    width: 150px;
+    font-size: large;
+    font: bold;
+
+    &:hover {
+        background-color: #016901;
+    }
+` 
+
 function Shows() {
     const [shows, setShows] = useState([]);
     const [isShows, setIsShows] = useState(false);
@@ -47,6 +63,10 @@ function Shows() {
 
     function handleClick(show) {
         navigate(`/masterDetail/${show.idShow}`, {state: {show}})
+    }
+
+    function handleAddShow() {
+        
     }
 
     async function getShows() {
@@ -79,6 +99,7 @@ function Shows() {
                 Shows
                 {/* <StyledButton onClick={handleShows}>Shows</StyledButton> */}
             </StyledHeader>
+            <StyledButton onClick={handleAddShow}>Add show</StyledButton>
             {isShows ? 
             <StyledShowsDiv>
                 {shows.map(s => 
