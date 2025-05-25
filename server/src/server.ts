@@ -37,7 +37,7 @@ const showSchema = new mongoose.Schema<Show>({
 		genre: { type: String, required: true },
 		release_date: { type: String, required: true },
 		description: { type: String, required: true },
-		image: { type: String, required: true },
+		// image: { type: String, required: true },
 	},
 	reviews: { type: Array(), required: true },
 }, { versionKey: false });
@@ -75,6 +75,22 @@ app.get('/users/count', async (req, res) => {
 		res.status(500).json({ error: 'Error counting users' });
 	}
 });
+
+app.get('/shows/:idShow', async (req, res) => {
+	try{
+		const { idShow } = req.params;
+		const show = await Shows.findOne({ idShow: parseInt(idShow)});
+
+		if(show) {
+			res.status(200).json({data: show})
+		} else {
+			res.status(404).json({error: "Show not found"})
+		}
+	} catch (err) {
+		console.error("Server error: ", err);
+		res.status(500).json({ error: 'Server error' });
+	}
+})
 
 app.get('/profile/:idUser', async (req, res) => {
 	try {
@@ -177,15 +193,39 @@ app.post('/shows/:idShow/reviews', async (req, res) => {
 	}
 });
 
+// app.delete('/shows/:idShow/reviews/:idReview', async (req, res) => {
+// 	try {
+// 		const { idShow, idReview } = req.params;
+// 		const show = await Shows.findOne({ idShow: parseInt(idShow) });
+
+// 		if (show) {
+// 			show.reviews.splice(parseInt(idReview), 1);
+// 			await show.save();
+// 			res.status(201).json({ data: show.reviews });
+// 		} else {
+// 			res.status(404).json({ error: 'Show not found' });
+// 		}
+// 	} catch (err) {
+// 		console.error(err);
+// 		res.status(500).json({ error: 'Server error' });
+// 	}
+// });
+
 app.delete('/shows/:idShow/reviews/:idReview', async (req, res) => {
 	try {
 		const { idShow, idReview } = req.params;
 		const show = await Shows.findOne({ idShow: parseInt(idShow) });
 
 		if (show) {
-			show.reviews.splice(parseInt(idReview), 1);
-			await show.save();
-			res.status(201).json({ data: show.reviews });
+			// Find index of review with matching idReview
+			const reviewIndex = show.reviews.findIndex(r => r.idReview === parseInt(idReview));
+			if (reviewIndex !== -1) {
+				show.reviews.splice(reviewIndex, 1);
+				await show.save();
+				res.status(200).json({ data: show.reviews });
+			} else {
+				res.status(404).json({ error: 'Review not found' });
+			}
 		} else {
 			res.status(404).json({ error: 'Show not found' });
 		}
@@ -201,7 +241,7 @@ app.put('/shows/:idShow/reviews/:idReview', async (req, res) => {
 		const { review } = req.body;
 		const show = await Shows.findOne({ idShow: parseInt(idShow) });
 		if (show) {
-			show.reviews[parseInt(idReview)] = review;
+			show.reviews[parseInt(idReview) - 1] = review;
 			await show.save();
 			res.status(201).json({ data: show.reviews });
 		} else {

@@ -33,25 +33,25 @@ const StyledAddButton = styled.button`
 function Sidebar({handleClick}) {
     const [shows, setShows] = useState([]);
 
-    useEffect(() => {
-        async function getShows() {
-            const response = await fetch("http://localhost:8080/shows", {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
+    async function getShows() {
+        const response = await fetch("http://localhost:8080/shows", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
 
-            if(!response.ok) {
-                const res = await response.json();
-                alert(res.error)
-                throw new Error("Error while getting shows")
-		    }
-
-            const result = await response.json();
-            setShows(result);
+        if(!response.ok) {
+            const res = await response.json();
+            alert(res.error)
+            throw new Error("Error while getting shows")
         }
 
+        const result = await response.json();
+        setShows(result.data);
+    }
+
+    useEffect(() => {
         getShows();
     }, [])
 

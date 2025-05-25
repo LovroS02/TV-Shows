@@ -86,7 +86,7 @@ function Login() {
             }
 
             const result = await response.json();
-            console.log("Result: ", result);
+            console.log("Result: ", result.data);
             navigate("/shows")
 
         } catch (err) {
