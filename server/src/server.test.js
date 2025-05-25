@@ -173,7 +173,7 @@ describe('API routes', () => {
 		expect(all).toHaveLength(2);
 	});
 
-	test('POST /shows with duplicate idShow returns 400', async () => {
+	test('POST /shows with duplicate titles returns 400', async () => {
 		const dup = {
 			title: 'First Show',
 			details: {
