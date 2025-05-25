@@ -1,8 +1,8 @@
-import styled from "styled-components"
-import { useState } from "react";
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+import { useState } from 'react';
+import { FaRegEyeSlash } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const StyledRegistration = styled.div`
     display: flex;
@@ -22,7 +22,7 @@ const StyledRegistration = styled.div`
 
 const StyledDiv = styled.div`
 
-`
+`;
 
 const StyledHeader = styled.header`
     background-color: blue;
@@ -31,7 +31,7 @@ const StyledHeader = styled.header`
     font-weight: bold;
     text-align: center;
     padding-top: 5px;
-`
+`;
 
 const StyledInput = styled.input`
     height: 50px;
@@ -57,63 +57,65 @@ const StyledButton = styled.button`
 `;
 
 function Login() {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [visible, setVisible] = useState(false);
+	const navigate = useNavigate();
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [visible, setVisible] = useState(false);
 
-    async function handleSubmit(e) {
-        e.preventDefault();
+	async function handleSubmit(e) {
+		e.preventDefault();
 
-        const newLoginUser = {
-            email: email,
-            password: password
-        }
-        
-        try {
-            const response = await fetch("http://localhost:8080/login", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newLoginUser)
-            })
+		const newLoginUser = {
+			email: email,
+			password: password,
+		};
 
-            if(!response.ok) {
-                const res = await response.json();
-                alert(res.error);
-                throw new Error("Error while logging");
-            }
+		try {
+			const response = await fetch('http://localhost:8080/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(newLoginUser),
+			});
 
-            const result = await response.json();
-            console.log("Result: ", result.data);
-            navigate("/shows")
+			if (!response.ok) {
+				const res = await response.json();
+				alert(res.error);
+				throw new Error('Error while logging');
+			}
 
-        } catch (err) {
-            console.log("Error: ", err);
-        }
-    }
+			const result = await response.json();
+			console.log('Result: ', result.data);
+			navigate('/shows');
 
-    return (
-       <StyledDiv>
-            <StyledHeader>
-                Login
-            </StyledHeader>
-            <form onSubmit={handleSubmit}>
-                <StyledRegistration>
-                    <h1>Complete the form</h1>
-                    <StyledInput type="text" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required></StyledInput>
-                    <StyledInput type={visible ? "text" : "password"} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required></StyledInput>
-                    <p>Password needs to have at least 10 characters and 1 number!</p>
-                    <button type="button" onClick={() => setVisible(!visible)}>
-                        <FaRegEyeSlash/>
-                    </button>
-                    <StyledButton type="submit">Login</StyledButton>
-                </StyledRegistration>
-            </form>
-            <Link to="/register" style={{margin: "600px"}}>Don't have an account? Register</Link>
-        </StyledDiv>
-    )
+		} catch (err) {
+			console.log('Error: ', err);
+		}
+	}
+
+	return (
+		<StyledDiv>
+			<StyledHeader>
+				Login
+			</StyledHeader>
+			<form onSubmit={handleSubmit}>
+				<StyledRegistration>
+					<h1>Complete the form</h1>
+					<StyledInput type="text" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+											 required></StyledInput>
+					<StyledInput type={visible ? 'text' : 'password'} placeholder="Password" value={password}
+											 onChange={e => setPassword(e.target.value)} required></StyledInput>
+					<p>Password needs to have at least 10 characters and 1 number!</p>
+					<button type="button" onClick={() => setVisible(!visible)}>
+						<FaRegEyeSlash />
+					</button>
+					<StyledButton type="submit">Login</StyledButton>
+				</StyledRegistration>
+			</form>
+			<Link to="/register" style={{ margin: '600px' }}>Don't have an account? Register</Link>
+		</StyledDiv>
+	);
 }
 
-export default Login
+export default Login;

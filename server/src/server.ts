@@ -77,20 +77,20 @@ app.get('/users/count', async (req, res) => {
 });
 
 app.get('/shows/:idShow', async (req, res) => {
-	try{
+	try {
 		const { idShow } = req.params;
-		const show = await Shows.findOne({ idShow: parseInt(idShow)});
+		const show = await Shows.findOne({ idShow: parseInt(idShow) });
 
-		if(show) {
-			res.status(200).json({data: show})
+		if (show) {
+			res.status(200).json({ data: show });
 		} else {
-			res.status(404).json({error: "Show not found"})
+			res.status(404).json({ error: 'Show not found' });
 		}
 	} catch (err) {
-		console.error("Server error: ", err);
+		console.error('Server error: ', err);
 		res.status(500).json({ error: 'Server error' });
 	}
-})
+});
 
 app.get('/profile/:idUser', async (req, res) => {
 	try {
@@ -217,12 +217,11 @@ app.delete('/shows/:idShow/reviews/:idReview', async (req, res) => {
 		const show = await Shows.findOne({ idShow: parseInt(idShow) });
 
 		if (show) {
-			// Find index of review with matching idReview
 			const reviewIndex = show.reviews.findIndex(r => r.idReview === parseInt(idReview));
 			if (reviewIndex !== -1) {
 				show.reviews.splice(reviewIndex, 1);
 				await show.save();
-				res.status(200).json({ data: show.reviews });
+				res.status(201).json({ data: show.reviews });
 			} else {
 				res.status(404).json({ error: 'Review not found' });
 			}

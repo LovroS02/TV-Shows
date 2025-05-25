@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const StyledHeader = styled.header`
     text-align: center;
@@ -41,28 +41,28 @@ const StyledButton = styled.button`
         background-color: gray;
         transform: scale(1.1);
     }
-`
+`;
 
 function Home() {
-    const navigate = useNavigate()
+	const navigate = useNavigate();
 
-    function handleRegister() {
-        navigate("/register");
-    }
+	function handleRegister() {
+		navigate('/register');
+	}
 
-    function handleLogin() {
-        navigate("/login")
-    }
+	function handleLogin() {
+		navigate('/login');
+	}
 
-    return (
-        <StyledHeader>
-            <StyledTitle>TV SHOWS</StyledTitle>
-            <StyledButtonDiv>
-                <StyledButton onClick={handleRegister}>Register</StyledButton>
-                <StyledButton onClick={handleLogin}>Login</StyledButton>
-            </StyledButtonDiv>
-        </StyledHeader>
-    )
+	return (
+		<StyledHeader>
+			<StyledTitle>TV SHOWS</StyledTitle>
+			<StyledButtonDiv>
+				<StyledButton onClick={handleRegister}>Register</StyledButton>
+				<StyledButton onClick={handleLogin}>Login</StyledButton>
+			</StyledButtonDiv>
+		</StyledHeader>
+	);
 }
 
 export default Home;

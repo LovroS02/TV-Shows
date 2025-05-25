@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
-import styled from "styled-components"
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 // import MasterDetail from "../components/MasterDetail"
 // import Sidebar from "../components/Sidebar"
-import { useLocation, useParams, useNavigate } from "react-router-dom"
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 
 // const StyledMasterDetailHeader = styled.header`
 //     background-color: blue;
@@ -25,17 +25,17 @@ const StyledHeader = styled.header`
     flex-direction: row;
     justify-content: center;
     gap: 10px;
-`
+`;
 
 const MainComponent = styled.div`
     display: flex;
-`
+`;
 
 const ContentComponent = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
-`
+`;
 
 const TopComponent = styled.div`
     height: 50%;
@@ -44,14 +44,14 @@ const TopComponent = styled.div`
     box-sizing: border-box;
     display: flex;
     justify-content: center;
-`
+`;
 
 const BottomComponent = styled.div`
     height: 50%;
     background-color: #f9f9f9;
     padding: 20px;
     box-sizing: border-box;
-`
+`;
 
 const MasterForm = styled.form`
     /* border: 1px solid black; */
@@ -61,7 +61,7 @@ const MasterForm = styled.form`
     display: flex;
     flex-direction: column;
     gap: 5px;
-`
+`;
 
 const GroupForm = styled.div`
     display: flex;
@@ -69,7 +69,7 @@ const GroupForm = styled.div`
     gap: 30px;
     justify-content: center;
     align-items: center;
-`
+`;
 
 const StyledInput = styled.input`
     width: 300px;
@@ -79,15 +79,15 @@ const StyledInput = styled.input`
     border-radius: 5px;
 
     &:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-  }
-`
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+`;
 
 const StyledLabel = styled.label`
     font-size: 20px;
-`
+`;
 
 const ButtonComponent = styled.div`
     display: flex;
@@ -96,7 +96,7 @@ const ButtonComponent = styled.div`
     height: 50px;
     text-align: center;
     justify-content: center;
-`
+`;
 
 const StyledButtonSave = styled.button`
     border-radius: 5px;
@@ -111,19 +111,19 @@ const StyledButtonSave = styled.button`
     &:hover {
         background-color: #016901;
     }
-`
+`;
 
 const ReviewsDiv = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-`
+`;
 
 const DetailForm = styled.form`
     display: flex;
     flex-direction: row;
     gap: 10px;
-`
+`;
 
 const StyledButtonEdit = styled.button`
     text-align: center;
@@ -139,7 +139,7 @@ const StyledButtonEdit = styled.button`
     &:hover {
         background-color: #c6c600;
     }
-`
+`;
 
 const StyledButtonDelete = styled.button`
     text-align: center;
@@ -155,7 +155,7 @@ const StyledButtonDelete = styled.button`
     &:hover {
         background-color: #bc0101;
     }
-`
+`;
 
 const StyledReviewHeader = styled.div`
     display: flex;
@@ -163,7 +163,7 @@ const StyledReviewHeader = styled.div`
     gap: 50px;
     /* justify-content: center; */
     align-items: center;
-`
+`;
 
 const StyledButtonAddReview = styled.button`
     background-color: green;
@@ -179,7 +179,7 @@ const StyledButtonAddReview = styled.button`
     &:hover {
         background-color: #016901;
     }
-`
+`;
 
 const StyledAddReviewForm = styled.form`
     width: 500px;
@@ -189,7 +189,7 @@ const StyledAddReviewForm = styled.form`
     display: flex;
     flex-direction: column;
     gap: 20px;
-`
+`;
 
 const GoBackButton = styled.button`
     background-color: blue;
@@ -205,331 +205,346 @@ const GoBackButton = styled.button`
     &:hover {
         background-color: #5555fa;
     }
-`
+`;
 
 function MasterDetail() {
-    const navigate = useNavigate();
-    const [isShows, setIsShows] = useState(false);
-    
-    const [reviews, setReviews] = useState();
+	const navigate = useNavigate();
+	const [isShows, setIsShows] = useState(false);
 
-    const {idShow} = useParams();
-    
-    const [isAddReviewForm, setIsAddReviewForm] = useState(false);
+	const [reviews, setReviews] = useState();
 
-    const [editingReviewId, setEditingReviewId] = useState(null);
-    const [editingReviewData, setEditingReviewData] = useState({ comment: "", grade: "" });
+	const { idShow } = useParams();
 
-    const [showForm, setShowForm] = useState({
-        idShow: "",
-        title: "",
-        details: {
-            author: "",
-            genre: "",
-            release_date: "",
-            description: "",
-        },
-        reviews: []
-    });
+	const [isAddReviewForm, setIsAddReviewForm] = useState(false);
 
-    const [newReview, setNewReview] = useState({
-        idReview: "",
-        comment: "",
-        grade: ""
-    })
+	const [editingReviewId, setEditingReviewId] = useState(null);
+	const [editingReviewData, setEditingReviewData] = useState({ comment: '', grade: '' });
 
-    useEffect(() => {
-        async function getShow() {
-            const tempIdShow = parseInt(idShow);
-            const response = await fetch(`http://localhost:8080/shows/${tempIdShow}`, {
-                method: 'GET',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-            })
+	const [showForm, setShowForm] = useState({
+		idShow: '',
+		title: '',
+		details: {
+			author: '',
+			genre: '',
+			release_date: '',
+			description: '',
+		},
+		reviews: [],
+	});
 
-            if(!response.ok) {
-                const res = await response.json();
-                // alert(res.error)
-                throw new Error("Error while getting show")
-            }
+	const [newReview, setNewReview] = useState({
+		idReview: '',
+		comment: '',
+		grade: '',
+	});
 
-            const result = await response.json();
-            const show = result.data;
+	useEffect(() => {
+		async function getShow() {
+			const tempIdShow = parseInt(idShow);
+			const response = await fetch(`http://localhost:8080/shows/${tempIdShow}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
 
-            setShowForm({
-                idShow: show.idShow,
-                title: show.title,
-                details: {
-                    author: show.details.author,
-                    genre: show.details.genre,
-                    release_date: show.details.release_date,
-                    description: show.details.description,
-                },
-                reviews: show.reviews
-            });
-        }
-        getShow();
-        setIsShows(true);
-    }, [idShow]);
+			if (!response.ok) {
+				const res = await response.json();
+				// alert(res.error)
+				throw new Error('Error while getting show');
+			}
 
-    function handleChange(e) {
-        const { name, value } = e.target;
+			const result = await response.json();
+			const show = result.data;
 
-        if (["author", "genre", "release_date", "description"].includes(name)) {
-            setShowForm({
-            ...showForm,
-            details: {
-                ...showForm.details,
-                [name]: value,
-            },
-            });
-        } else {
-            setShowForm({ ...showForm, [name]: value });
-        }
-    }
+			setShowForm({
+				idShow: show.idShow,
+				title: show.title,
+				details: {
+					author: show.details.author,
+					genre: show.details.genre,
+					release_date: show.details.release_date,
+					description: show.details.description,
+				},
+				reviews: show.reviews,
+			});
+		}
 
-    function handleReviewChange(e) {
-        const {name, value} = e.target;
+		getShow();
+		setIsShows(true);
+	}, [idShow]);
 
-        setNewReview(prev => ({...prev, [name] : value}));
-    }
+	function handleChange(e) {
+		const { name, value } = e.target;
 
-    async function handleDelete(idToDelete) {
+		if (['author', 'genre', 'release_date', 'description'].includes(name)) {
+			setShowForm({
+				...showForm,
+				details: {
+					...showForm.details,
+					[name]: value,
+				},
+			});
+		} else {
+			setShowForm({ ...showForm, [name]: value });
+		}
+	}
 
-        const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews/${idToDelete}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+	function handleReviewChange(e) {
+		const { name, value } = e.target;
 
-        if(!response.ok) {
-            const res = await response.json();
-            throw new Error("Error while deleting a review!")
-        }
+		setNewReview(prev => ({ ...prev, [name]: value }));
+	}
 
-        const result = await response.json();
-        // setReviews(prevReviews => prevReviews.filter(r => r.idReview !== idToDelete))
-        setShowForm(prevForm => ({
-            ...prevForm,
-            reviews: prevForm.reviews.filter(review => review.idReview !== idToDelete)
-        }));
-    }
+	async function handleDelete(idToDelete) {
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}`, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(showForm)
-        });
+		const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews/${idToDelete}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
 
-        if(response.status === 500) {
-            throw new Error("Error");
-        }
+		if (!response.ok) {
+			const res = await response.json();
+			throw new Error('Error while deleting a review!');
+		}
 
-        const result = await response.json();
-        console.log("Saving changes for show: ", result);
-    }
+		const result = await response.json();
+		// setReviews(prevReviews => prevReviews.filter(r => r.idReview !== idToDelete))
+		setShowForm(prevForm => ({
+			...prevForm,
+			reviews: prevForm.reviews.filter(review => review.idReview !== idToDelete),
+		}));
+	}
 
-    function handleAddReview() {
-        setIsAddReviewForm(!isAddReviewForm);
-    }
+	async function handleSubmit(e) {
+		e.preventDefault();
+		const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(showForm),
+		});
 
-    async function handleSaveReview(e) {
-        e.preventDefault();
-        let idReview = (showForm.reviews.length) + 1;
-        // setNewReview(prev => ({
-        //     ...prev, idReview: idReview
-        // }))
-        const reviewToAdd = {...newReview, idReview};
+		if (response.status === 500) {
+			throw new Error('Error');
+		}
 
-        const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({review: reviewToAdd})
-        });
+		const result = await response.json();
+		console.log('Saving changes for show: ', result);
+	}
 
-        if(!response.ok) {
-            throw new Error("Error while putting new review!")
-        }
+	function handleAddReview() {
+		setIsAddReviewForm(!isAddReviewForm);
+	}
 
-        const result = await response.json();
-        // setReviews(prev => [...prev, reviewToAdd]);
-        setShowForm(prevForm => ({
-            ...prevForm,
-            reviews: result.data
-        }));
+	async function handleSaveReview(e) {
+		e.preventDefault();
+		let idReview = (showForm.reviews.length) + 1;
+		// setNewReview(prev => ({
+		//     ...prev, idReview: idReview
+		// }))
+		const reviewToAdd = { ...newReview, idReview };
 
-        setIsAddReviewForm(false);
-    }
+		const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ review: reviewToAdd }),
+		});
 
-    function handleGoBack() {
-        navigate("/shows");
-    }
+		if (!response.ok) {
+			throw new Error('Error while putting new review!');
+		}
 
-    function handleEditReview(review) {
-        setEditingReviewId(review.idReview);
-        setEditingReviewData({ comment: review.comment, grade: review.grade });
-    }
+		const result = await response.json();
+		// setReviews(prev => [...prev, reviewToAdd]);
+		setShowForm(prevForm => ({
+			...prevForm,
+			reviews: result.data,
+		}));
 
-    function handleEditReviewChange(e) {
-        const { name, value } = e.target;
-        setEditingReviewData(prev => ({ ...prev, [name]: value }));
-    }
+		setIsAddReviewForm(false);
+	}
 
-    async function handleEditReviewSave(e, idReview) {
-        e.preventDefault();
+	function handleGoBack() {
+		navigate('/shows');
+	}
 
-        const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews/${idReview}`, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ review: { idReview, ...editingReviewData } }),
-        });
+	function handleEditReview(review) {
+		setEditingReviewId(review.idReview);
+		setEditingReviewData({ comment: review.comment, grade: review.grade });
+	}
 
-        if (!response.ok) {
-            throw new Error("Error while editing review!");
-        }
+	function handleEditReviewChange(e) {
+		const { name, value } = e.target;
+		setEditingReviewData(prev => ({ ...prev, [name]: value }));
+	}
 
-        const result = await response.json();
+	async function handleEditReviewSave(e, idReview) {
+		e.preventDefault();
 
-        setShowForm(prevForm => ({
-            ...prevForm,
-            reviews: result.data
-        }));
+		const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews/${idReview}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ review: { idReview, ...editingReviewData } }),
+		});
 
-        setEditingReviewId(null);
-        setEditingReviewData({ comment: "", grade: "" });
-    }
+		if (!response.ok) {
+			throw new Error('Error while editing review!');
+		}
 
-    return (
-        <div>
-            <StyledHeader>
-                MasterDetail
-                {/* <StyledButton onClick={handleShows}>Shows</StyledButton> */}
-            </StyledHeader>
-            {isShows && 
-            <ContentComponent>
-                <TopComponent>
-                    <MasterForm onSubmit={handleSubmit}>
-                        <h2>Edit show: {showForm.title}</h2>
-                        {/* <p>SHOW</p> */}
-                        {/* <hr style={{ border: 'none', borderTop: '2px solid black', width: '100%'}}/> */}
-                        <GroupForm>
-                            <StyledLabel>Title: </StyledLabel>
-                            <StyledInput type="text" name="title" value={showForm.title} onChange={handleChange}/>
-                        </GroupForm>
-                        <GroupForm>
-                            <StyledLabel>Author: </StyledLabel>
-                            <StyledInput type="text" name="author" value={showForm.details.author} onChange={handleChange}/>
-                        </GroupForm>
-                        <GroupForm>
-                            <StyledLabel>Genre: </StyledLabel>
-                            <StyledInput type="text" name="genre" value={showForm.details.genre} onChange={handleChange}/>
-                        </GroupForm>
-                        <GroupForm>
-                            <StyledLabel>Release date: </StyledLabel>
-                            <StyledInput type="text" name="release_date" value={showForm.details.release_date} onChange={handleChange}/>
-                        </GroupForm>
-                        <GroupForm>
-                            <StyledLabel>Description: </StyledLabel>
-                            <StyledInput type="text" name="description" value={showForm.details.description} onChange={handleChange}/>
-                        </GroupForm>
-                        <ButtonComponent>
-                            <StyledButtonSave type="submit" >Save</StyledButtonSave>
-                            {/* <StyledButtonDelete>Delete</StyledButtonDelete> */}
-                        </ButtonComponent>
-                    </MasterForm>
-                    {showForm.details.image && 
-                        <img src={showForm.details.image} alt="slika" style={{height: "300px", width: "200px", objectFit: "cover", borderRadius: "5px"}}></img>
-                    }
-                </TopComponent>
-                <hr />
-                <BottomComponent>
-                    {!isAddReviewForm ? 
-                    <ReviewsDiv>
-                        <StyledReviewHeader>
-                            <h2>Reviews</h2>
-                            <StyledButtonAddReview onClick={handleAddReview}>Add review</StyledButtonAddReview>
-                        </StyledReviewHeader>
-                        <GroupForm style={{justifyContent: "flex-start", gap: "160px", backgroundColor: "#e5e6e5"}}>
-                            <StyledLabel>ID</StyledLabel>
-                            <StyledLabel>Comment</StyledLabel>
-                            <StyledLabel>Rating</StyledLabel>
-                        </GroupForm>
-                        {showForm.reviews.map(r => (
-                            <GroupForm key={r.idReview} style={{ gap: "190px", justifyContent: "flex-start" }}>
-                                {editingReviewId === r.idReview ? (
-                                    <form onSubmit={(e) => handleEditReviewSave(e, r.idReview)} style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
-                                        <StyledLabel>{r.idReview}</StyledLabel>
-                                        <StyledInput
-                                            type="text"
-                                            name="comment"
-                                            value={editingReviewData.comment}
-                                            onChange={handleEditReviewChange}
-                                            required
-                                        />
-                                        <select
-                                            name="grade"
-                                            value={editingReviewData.grade}
-                                            onChange={handleEditReviewChange}
-                                            required
-                                        >
-                                            <option value="">Select grade</option>
-                                            {[1, 2, 3, 4, 5].map((num) => (
-                                                <option key={num} value={num}>{num}</option>
-                                            ))}
-                                        </select>
-                                        <StyledButtonSave type="submit">Save</StyledButtonSave>
-                                        <StyledButtonDelete type="button" onClick={() => setEditingReviewId(null)}>Cancel</StyledButtonDelete>
-                                    </form>
-                                ) : (
-                                    <>
-                                        <StyledLabel>{r.idReview}</StyledLabel>
-                                        <StyledLabel>{r.comment}</StyledLabel>
-                                        <StyledLabel>{r.grade}</StyledLabel>
-                                        <StyledButtonEdit onClick={() => handleEditReview(r)}>Edit</StyledButtonEdit>
-                                        <StyledButtonDelete onClick={() => handleDelete(r.idReview)}>Delete</StyledButtonDelete>
-                                    </>
-                                )}
-                            </GroupForm>
-                        ))}
-                    </ReviewsDiv>
-                     : 
-                    <StyledAddReviewForm onSubmit={handleSaveReview}>
-                        <h1>Add review</h1>
-                        <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
-                            <StyledLabel>Comment: </StyledLabel>
-                            <StyledInput type="text" name="comment" placeholder="Write a comment" onChange={handleReviewChange} required/>
-                        </div>
-                        <div style={{display: "flex", flexDirection: "row", gap: "10px", textAlign: "center", alignItems: "center"}}>
-                            <StyledLabel>Grade: </StyledLabel>
-                            <select id="grade" name="grade" onChange={handleReviewChange} required>
-                                <option value="">Select grade</option>
-                                {[1, 2, 3, 4, 5].map((num) => (
-                                <option key={num} value={num}>{num}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <button style={{border: "none", borderRadius: "5px", cursor: "pointer", height: "30px", width: "70px",
-                            backgroundColor: "green", marginLeft: "200px", fontSize: "large"
-                        }} type="submit">Save</button>
-                    </StyledAddReviewForm>
-                }
-                </BottomComponent>
-            </ContentComponent>
-            }
-            {/* </MainComponent> */}
-            <GoBackButton style={{marginTop: "50px"}} onClick={handleGoBack}>Back to shows</GoBackButton>
-        </div>
-    )
+		const result = await response.json();
+
+		setShowForm(prevForm => ({
+			...prevForm,
+			reviews: result.data,
+		}));
+
+		setEditingReviewId(null);
+		setEditingReviewData({ comment: '', grade: '' });
+	}
+
+	return (
+		<div>
+			<StyledHeader>
+				MasterDetail
+				{/* <StyledButton onClick={handleShows}>Shows</StyledButton> */}
+			</StyledHeader>
+			{isShows &&
+				<ContentComponent>
+					<TopComponent>
+						<MasterForm onSubmit={handleSubmit}>
+							<h2>Edit show: {showForm.title}</h2>
+							{/* <p>SHOW</p> */}
+							{/* <hr style={{ border: 'none', borderTop: '2px solid black', width: '100%'}}/> */}
+							<GroupForm>
+								<StyledLabel>Title: </StyledLabel>
+								<StyledInput type="text" name="title" value={showForm.title} onChange={handleChange} />
+							</GroupForm>
+							<GroupForm>
+								<StyledLabel>Author: </StyledLabel>
+								<StyledInput type="text" name="author" value={showForm.details.author} onChange={handleChange} />
+							</GroupForm>
+							<GroupForm>
+								<StyledLabel>Genre: </StyledLabel>
+								<StyledInput type="text" name="genre" value={showForm.details.genre} onChange={handleChange} />
+							</GroupForm>
+							<GroupForm>
+								<StyledLabel>Release date: </StyledLabel>
+								<StyledInput type="text" name="release_date" value={showForm.details.release_date}
+														 onChange={handleChange} />
+							</GroupForm>
+							<GroupForm>
+								<StyledLabel>Description: </StyledLabel>
+								<StyledInput type="text" name="description" value={showForm.details.description}
+														 onChange={handleChange} />
+							</GroupForm>
+							<ButtonComponent>
+								<StyledButtonSave type="submit">Save</StyledButtonSave>
+								{/* <StyledButtonDelete>Delete</StyledButtonDelete> */}
+							</ButtonComponent>
+						</MasterForm>
+						{showForm.details.image &&
+							<img src={showForm.details.image} alt="slika"
+									 style={{ height: '300px', width: '200px', objectFit: 'cover', borderRadius: '5px' }}></img>
+						}
+					</TopComponent>
+					<hr />
+					<BottomComponent>
+						{!isAddReviewForm ?
+							<ReviewsDiv>
+								<StyledReviewHeader>
+									<h2>Reviews</h2>
+									<StyledButtonAddReview onClick={handleAddReview}>Add review</StyledButtonAddReview>
+								</StyledReviewHeader>
+								<GroupForm style={{ justifyContent: 'flex-start', gap: '160px', backgroundColor: '#e5e6e5' }}>
+									<StyledLabel>ID</StyledLabel>
+									<StyledLabel>Comment</StyledLabel>
+									<StyledLabel>Rating</StyledLabel>
+								</GroupForm>
+								{showForm.reviews.map(r => (
+									<GroupForm key={r.idReview} style={{ gap: '190px', justifyContent: 'flex-start' }}>
+										{editingReviewId === r.idReview ? (
+											<form onSubmit={(e) => handleEditReviewSave(e, r.idReview)}
+														style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center' }}>
+												<StyledLabel>{r.idReview}</StyledLabel>
+												<StyledInput
+													type="text"
+													name="comment"
+													value={editingReviewData.comment}
+													onChange={handleEditReviewChange}
+													required
+												/>
+												<select
+													name="grade"
+													value={editingReviewData.grade}
+													onChange={handleEditReviewChange}
+													required
+												>
+													<option value="">Select grade</option>
+													{[1, 2, 3, 4, 5].map((num) => (
+														<option key={num} value={num}>{num}</option>
+													))}
+												</select>
+												<StyledButtonSave type="submit">Save</StyledButtonSave>
+												<StyledButtonDelete type="button"
+																						onClick={() => setEditingReviewId(null)}>Cancel</StyledButtonDelete>
+											</form>
+										) : (
+											<>
+												<StyledLabel>{r.idReview}</StyledLabel>
+												<StyledLabel>{r.comment}</StyledLabel>
+												<StyledLabel>{r.grade}</StyledLabel>
+												<StyledButtonEdit onClick={() => handleEditReview(r)}>Edit</StyledButtonEdit>
+												<StyledButtonDelete onClick={() => handleDelete(r.idReview)}>Delete</StyledButtonDelete>
+											</>
+										)}
+									</GroupForm>
+								))}
+							</ReviewsDiv>
+							:
+							<StyledAddReviewForm onSubmit={handleSaveReview}>
+								<h1>Add review</h1>
+								<div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+									<StyledLabel>Comment: </StyledLabel>
+									<StyledInput type="text" name="comment" placeholder="Write a comment" onChange={handleReviewChange}
+															 required />
+								</div>
+								<div style={{
+									display: 'flex',
+									flexDirection: 'row',
+									gap: '10px',
+									textAlign: 'center',
+									alignItems: 'center',
+								}}>
+									<StyledLabel>Grade: </StyledLabel>
+									<select id="grade" name="grade" onChange={handleReviewChange} required>
+										<option value="">Select grade</option>
+										{[1, 2, 3, 4, 5].map((num) => (
+											<option key={num} value={num}>{num}</option>
+										))}
+									</select>
+								</div>
+								<button style={{
+									border: 'none', borderRadius: '5px', cursor: 'pointer', height: '30px', width: '70px',
+									backgroundColor: 'green', marginLeft: '200px', fontSize: 'large',
+								}} type="submit">Save
+								</button>
+							</StyledAddReviewForm>
+						}
+					</BottomComponent>
+				</ContentComponent>
+			}
+			{/* </MainComponent> */}
+			<GoBackButton style={{ marginTop: '50px' }} onClick={handleGoBack}>Back to shows</GoBackButton>
+		</div>
+	);
 }
 
 export default MasterDetail;

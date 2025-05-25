@@ -7,17 +7,17 @@ import Shows from './pages/Shows';
 import MasterDetail from './pages/MasterDetail';
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />}/>
-        <Route path='/register' element={<Register />}/>
-        <Route path='/login' element={<Login />}/>
-        <Route path='/shows' element={<Shows />}/>
-        <Route path='/masterDetail/:idShow' element={<MasterDetail />}></Route>
-      </Routes>
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/register" element={<Register />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/shows" element={<Shows />} />
+				<Route path="/masterDetail/:idShow" element={<MasterDetail />}></Route>
+			</Routes>
+		</BrowserRouter>
+	);
 }
 
 export default App;
