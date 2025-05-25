@@ -290,3 +290,5 @@ app.put('/shows/:idShow', async (req, res) => {
 app.listen(process.env.PORT, () => {
 	console.log(`bok port ${process.env.PORT}`);
 });
+
+module.exports = app;
