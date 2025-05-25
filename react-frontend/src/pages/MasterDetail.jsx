@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import MasterDetail from "../components/MasterDetail"
 // import Sidebar from "../components/Sidebar"
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 // const StyledMasterDetailHeader = styled.header`
 //     background-color: blue;
@@ -105,7 +105,7 @@ const StyledButtonSave = styled.button`
     height: 30px;
     width: 70px;
     font-size: large;
-    font: bold;
+    font-weight: bold;
     background-color: green;
 
     &:hover {
@@ -134,7 +134,7 @@ const StyledButtonEdit = styled.button`
     height: 30px;
     width: 70px;
     font-size: large;
-    font: bold;
+    font-weight: bold;
 
     &:hover {
         background-color: #c6c600;
@@ -150,7 +150,7 @@ const StyledButtonDelete = styled.button`
     height: 30px;
     width: 70px;
     font-size: large;
-    font: bold;
+    font-weight: bold;
 
     &:hover {
         background-color: #bc0101;
@@ -174,7 +174,7 @@ const StyledButtonAddReview = styled.button`
     height: 30px;
     width: 150px;
     font-size: large;
-    font: bold;
+    font-weight: bold;
 
     &:hover {
         background-color: #016901;
@@ -200,7 +200,7 @@ const GoBackButton = styled.button`
     height: 30px;
     width: 150px;
     font-size: large;
-    font: bold;
+    font-weight: bold;
 
     &:hover {
         background-color: #5555fa;

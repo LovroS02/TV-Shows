@@ -49,7 +49,7 @@ const StyledButton = styled.button`
     height: 30px;
     width: 150px;
     font-size: large;
-    font: bold;
+    font-weight: bold;
 
     &:hover {
         background-color: #016901;
