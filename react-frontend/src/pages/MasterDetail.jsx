@@ -348,15 +348,29 @@ function MasterDetail() {
 	}
 
     async function handleSaveReview(e) {
-        
         e.preventDefault();
-        let idReview = (showForm.reviews.length) + 1;
+
+        const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error('Error while putting new review!');
+		}
+
+        const result = await response.json();
+
+        let idReview = result.data.reviews.at(-1) ? result.data.reviews.at(-1).idReview + 1 : 1;
+
         // setNewReview(prev => ({
         //     ...prev, idReview: idReview
         // }))
         const reviewToAdd = {...newReview, idReview};
 
-		const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews`, {
+		const response2 = await fetch(`http://localhost:8080/shows/${showForm.idShow}/reviews`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -368,11 +382,11 @@ function MasterDetail() {
 			throw new Error('Error while putting new review!');
 		}
 
-        const result = await response.json();
+        const result2 = await response2.json();
         // setReviews(prev => [...prev, reviewToAdd]);
         setShowForm({
             ...showForm,
-            reviews: result.data
+            reviews: result2.data
         });
 
 		setIsAddReviewForm(false);
