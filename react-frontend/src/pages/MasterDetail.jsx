@@ -278,7 +278,6 @@ function MasterDetail() {
     function handleChange(e) {
         const { name, value } = e.target;
 
-        
         if (["author", "genre", "release_date", "description"].includes(name)) {
             setShowForm({
             ...showForm,
@@ -420,6 +419,25 @@ function MasterDetail() {
 		setEditingReviewData({ comment: '', grade: '' });
 	}
 
+    async function handleDeleteShow(e) {
+        e.preventDefault()
+        const response = await fetch(`http://localhost:8080/shows/${showForm.idShow}`, {
+            method: "DELETE",
+            headers: {
+				'Content-Type': 'application/json',
+			},
+        })
+
+        if(!response.ok) {
+            const res = await response.json();
+            throw new Error("Error while adding show");
+        }
+
+        const result = await response.json();
+
+        navigate("/shows");
+    }
+
     return (
         <div>
             <StyledHeader>
@@ -455,7 +473,7 @@ function MasterDetail() {
                         </GroupForm>
                         <ButtonComponent>
                             <StyledButtonSave type="submit" >Save</StyledButtonSave>
-                            {/* <StyledButtonDelete>Delete</StyledButtonDelete> */}
+                            <StyledButtonDelete onClick={handleDeleteShow}>Delete</StyledButtonDelete>
                         </ButtonComponent>
                     </MasterForm>
                     
