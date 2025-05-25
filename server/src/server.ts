@@ -242,8 +242,13 @@ app.put('/shows/:idShow', async (req, res) => {
 app.post('/shows', async (req, res) => {
 	try {
 		const { title, details } = req.body;
-		const count = await Shows.countDocuments();
 
+		const exists = await Shows.findOne({ title: title });
+		if (exists) {
+			res.status(400).json({ error: 'Show with that idShow already exists' });
+		}
+
+		const count = await Shows.countDocuments();
 		const newShow = {
 			idShow: count + 1,
 			title,

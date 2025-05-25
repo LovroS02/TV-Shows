@@ -146,4 +146,65 @@ describe('API routes', () => {
 		expect(res.status).toBe(201);
 		expect(res.body.data.title).toBe('Updated Show');
 	});
+
+	test('POST /shows creates a new show', async () => {
+		const newShow = {
+			title: 'New Show',
+			details: {
+				author: 'B',
+				genre: 'Horror',
+				release_date: '2025-02-02',
+				description: 'Scary',
+				image: 'https://fakeimg.pl/200x300'
+			},
+		};
+
+		const res = await request(app)
+			.post('/shows')
+			.send(newShow);
+
+		expect(res.status).toBe(201);
+		expect(res.body.data).toMatchObject({
+			idShow: 2,
+			title: 'New Show'
+		});
+
+		const all = await Shows.find();
+		expect(all).toHaveLength(2);
+	});
+
+	test('POST /shows with duplicate idShow returns 400', async () => {
+		const dup = {
+			title: 'First Show',
+			details: {
+				author: 'X',
+				genre: 'X',
+				release_date: '2025-03-03',
+				description: 'X',
+				image: 'https://fakeimg.pl/200x300'
+			},
+		};
+		const res = await request(app)
+			.post('/shows')
+			.send(dup);
+
+		expect(res.status).toBe(400);
+		expect(res.body.error).toMatch(/already exists/);
+	});
+
+	test('DELETE /shows/:idShow deletes existing show', async () => {
+		const res = await request(app).delete('/shows/1');
+
+		expect(res.status).toBe(200);
+		expect(res.body.data.idShow).toBe(1);
+
+		const remaining = await Shows.find();
+		expect(remaining).toHaveLength(0);
+	});
+
+	test('DELETE /shows/:idShow returns 404 for non-existent', async () => {
+		const res = await request(app).delete('/shows/999');
+		expect(res.status).toBe(404);
+		expect(res.body.error).toMatch(/not found/);
+	});
 });
