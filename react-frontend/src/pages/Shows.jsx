@@ -61,13 +61,9 @@ function Shows() {
 	const [isShows, setIsShows] = useState(false);
 	const navigate = useNavigate();
 
-	function handleClick(show) {
-		navigate(`/masterDetail/${show.idShow}`, { state: { show } });
-	}
-
-	function handleAddShow() {
-
-	}
+    function handleClick(show) {
+        navigate(`/masterDetail/${show.idShow}`, {state: {show}})
+    }
 
 	async function getShows() {
 		const response = await fetch('http://localhost:8080/shows', {
@@ -93,24 +89,23 @@ function Shows() {
 		getShows();
 	}, []);
 
-	return (
-		<div>
-			<StyledHeader>
-				Shows
-				{/* <StyledButton onClick={handleShows}>Shows</StyledButton> */}
-			</StyledHeader>
-			<StyledButton onClick={handleAddShow}>Add show</StyledButton>
-			{isShows ?
-				<StyledShowsDiv>
-					{shows.map(s =>
-						<StyledShowCard onClick={() => handleClick(s)} key={s.title}>
-							<StyledTitle>{s.title}</StyledTitle>
-							<StyledImage key={s.title} src={s.details.image}></StyledImage>
-						</StyledShowCard>)}
-				</StyledShowsDiv>
-				: <div>Loading shows...</div>}
-		</div>
-	);
+    return (
+        <div>
+            <StyledHeader>
+                Shows
+                {/* <StyledButton onClick={handleShows}>Shows</StyledButton> */}
+            </StyledHeader>
+            {isShows ? 
+            <StyledShowsDiv>
+                {shows.map(s => 
+                <StyledShowCard onClick={() => handleClick(s)} key={s.title}>
+                    <StyledTitle>{s.title}</StyledTitle>
+                    <StyledImage key={s.title} src={s.details.image}></StyledImage>
+                </StyledShowCard>)}
+            </StyledShowsDiv>
+             : <div>Loading shows...</div>}
+        </div>
+    )
 }
 
 export default Shows;

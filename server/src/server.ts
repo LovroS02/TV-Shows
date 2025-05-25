@@ -37,7 +37,7 @@ const showSchema = new mongoose.Schema<Show>({
 		genre: { type: String, required: true },
 		release_date: { type: String, required: true },
 		description: { type: String, required: true },
-		// image: { type: String, required: true },
+		image: { type: String, required: true },
 	},
 	reviews: { type: Array(), required: true },
 }, { versionKey: false });
@@ -77,14 +77,15 @@ app.get('/users/count', async (req, res) => {
 });
 
 app.get('/shows/:idShow', async (req, res) => {
+	
 	try {
 		const { idShow } = req.params;
 		const show = await Shows.findOne({ idShow: parseInt(idShow) });
 
 		if (show) {
-			res.status(200).json({ data: show });
+			res.status(200).json({ data: show })
 		} else {
-			res.status(404).json({ error: 'Show not found' });
+			res.status(404).json({ error: "Show not found" })
 		}
 	} catch (err) {
 		console.error('Server error: ', err);
@@ -256,17 +257,30 @@ app.put('/shows/:idShow', async (req, res) => {
 	try {
 		const { idShow } = req.params;
 		const updates = req.body;
-		const show = await Shows.findOneAndUpdate(
-			{ idShow: parseInt(idShow) },
-			{ $set: updates },
-			{ new: true },
-		);
 
+		let show;
+		try {
+			show = await Shows.findOne({ idShow: +idShow });
+		} catch(err) {
+			console.error(err);
+			res.status(500).json({ error: 'Server error' });
+		}
 		if (show) {
+			if (updates.details) {
+				show.details = {
+					...show.details,
+					...updates.details
+				};
+				delete updates.details
+			}
+
+			Object.assign(show, updates);
+			await show.save();
 			res.status(201).json({ data: show });
 		} else {
 			res.status(404).json({ error: 'Show not found' });
 		}
+
 	} catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Server error' });

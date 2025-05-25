@@ -54,14 +54,21 @@ function Home() {
 		navigate('/login');
 	}
 
+    function handleClick() {
+        navigate("/shows");
+    } 
+
 	return (
-		<StyledHeader>
-			<StyledTitle>TV SHOWS</StyledTitle>
-			<StyledButtonDiv>
-				<StyledButton onClick={handleRegister}>Register</StyledButton>
-				<StyledButton onClick={handleLogin}>Login</StyledButton>
-			</StyledButtonDiv>
-		</StyledHeader>
+        <div>
+    		<StyledHeader>
+    			<StyledTitle>TV SHOWS</StyledTitle>
+    			<StyledButtonDiv>
+    				<StyledButton onClick={handleRegister}>Register</StyledButton>
+    				<StyledButton onClick={handleLogin}>Login</StyledButton>
+    			</StyledButtonDiv>
+    		</StyledHeader>
+            <StyledButton style={{backgroundColor: "blue", height: "50px"}} onClick={handleClick}>Go to shows</StyledButton>
+        </div>
 	);
 }
 
