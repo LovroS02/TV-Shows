@@ -67,15 +67,6 @@ app.get('/users', async (req, res) => {
 	}
 });
 
-app.get('/users/count', async (req, res) => {
-	try {
-		const count = await Users.countDocuments();
-		res.status(200).json({ data: count });
-	} catch (err) {
-		res.status(500).json({ error: 'Error counting users' });
-	}
-});
-
 app.get('/shows/:idShow', async (req, res) => {
 	
 	try {
@@ -127,51 +118,30 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-	let count = 0;
-
 	try {
-		const response = await fetch('http://localhost:8080/users/count', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
+		const count = await Users.countDocuments();
+		const	hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-		if (!response.ok) {
-			const errorRes = await response.json();
-			console.error(errorRes.error);
-			res.status(500).json({ error: 'Error while getting users' });
+		const newUser = {
+			...req.body,
+			idUser: count + 1,
+			role: 'user',
+			password: hashedPassword,
+		};
+
+		try {
+			const userDoc = new Users(newUser);
+			await userDoc.save();
+			res.status(201).json({ data: 'Registration successful' });
+
+			return;
+		} catch (err) {
+			console.error('DB error:', err);
+			res.status(500).json({ error: 'Error saving user' });
 		}
-
-		const result = await response.json();
-		count = result.count;
 	} catch (error) {
 		console.error(error);
-		res.status(500).json({ error: 'Server error fetching user count' });
-	}
-
-	let hashedPassword;
-	try {
-		hashedPassword = await bcrypt.hash(req.body.password, 10);
-	} catch (err) {
-		console.error('Bcrypt error:', err);
-		res.status(500).json({ error: 'Error hashing password' });
-	}
-
-	const newUser = {
-		...req.body,
-		idUser: count + 1,
-		role: 'user',
-		password: hashedPassword,
-	};
-
-	try {
-		const userDoc = new Users(newUser);
-		await userDoc.save();
-		res.status(201).json({ data: 'Registration successful' });
-	} catch (err) {
-		console.error('DB error:', err);
-		res.status(500).json({ error: 'Error saving user' });
+		res.status(500).json({ error: 'Server error' });
 	}
 });
 
@@ -193,24 +163,6 @@ app.post('/shows/:idShow/reviews', async (req, res) => {
 		res.status(500).json({ error: 'Server error' });
 	}
 });
-
-// app.delete('/shows/:idShow/reviews/:idReview', async (req, res) => {
-// 	try {
-// 		const { idShow, idReview } = req.params;
-// 		const show = await Shows.findOne({ idShow: parseInt(idShow) });
-
-// 		if (show) {
-// 			show.reviews.splice(parseInt(idReview), 1);
-// 			await show.save();
-// 			res.status(201).json({ data: show.reviews });
-// 		} else {
-// 			res.status(404).json({ error: 'Show not found' });
-// 		}
-// 	} catch (err) {
-// 		console.error(err);
-// 		res.status(500).json({ error: 'Server error' });
-// 	}
-// });
 
 app.delete('/shows/:idShow/reviews/:idReview', async (req, res) => {
 	try {
@@ -291,4 +243,4 @@ app.listen(process.env.PORT, () => {
 	console.log(`bok port ${process.env.PORT}`);
 });
 
-module.exports = app;
+module.exports = {app, Users, Shows};
