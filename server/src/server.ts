@@ -239,6 +239,47 @@ app.put('/shows/:idShow', async (req, res) => {
 	}
 });
 
+app.post('/shows', async (req, res) => {
+	try {
+		const { title, details } = req.body;
+		const count = await Shows.countDocuments();
+
+		const newShow = {
+			idShow: count + 1,
+			title,
+			details,
+			reviews: []
+		};
+
+		try {
+			const showDoc = new Shows(newShow);
+			await showDoc.save();
+			res.status(201).json({ data: newShow });
+		} catch (err) {
+			console.error('DB error:', err);
+			res.status(500).json({ error: 'Error saving show' });
+		}
+	} catch (err) {
+		console.error('Error creating show:', err);
+		res.status(500).json({ error: 'Error creating show' });
+	}
+});
+
+app.delete('/shows/:idShow', async (req, res) => {
+	try {
+		const { idShow } = req.params;
+		const deleted = await Shows.findOneAndDelete({ idShow: parseInt(idShow) });
+		if (deleted) {
+			res.status(200).json({ data: deleted });
+		} else {
+			res.status(404).json({ error: 'Show not found' });
+		}
+	} catch (err) {
+		console.error('Error deleting show:', err);
+		res.status(500).json({ error: 'Error deleting show' });
+	}
+});
+
 app.listen(process.env.PORT, () => {
 	console.log(`bok port ${process.env.PORT}`);
 });
