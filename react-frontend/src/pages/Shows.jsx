@@ -201,12 +201,13 @@ function Shows() {
             body: JSON.stringify(newShow)
         });
 
-        if(!response.ok) {
+        if(!response.ok || response.status === 400) {
             const res = await response.json();
+            console.error(res.error);
             throw new Error("Error while adding show");
         }
 
-        const result = await response.json();
+        // const result = await response.json();
 
         closeDialog();
     }
