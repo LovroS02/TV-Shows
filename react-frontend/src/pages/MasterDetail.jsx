@@ -228,7 +228,7 @@ function MasterDetail() {
             genre: "",
             release_date: "",
             description: "",
-            image: "https://fakeimg.pl/200x300"
+            image: "https://placehold.jp/200x300.png"
         },
         reviews: []
     });
@@ -491,7 +491,7 @@ function MasterDetail() {
                         </ButtonComponent>
                     </MasterForm>
                     
-                        <img src={showForm.details.image} alt="https://fakeimg.pl/200x300" style={{height: "300px", width: "200px", objectFit: "cover", borderRadius: "5px"}}></img>
+                        <img src={showForm.details.image} alt="https://placehold.jp/200x300.png" style={{height: "300px", width: "200px", objectFit: "cover", borderRadius: "5px"}}></img>
                     
                 </TopComponent>
                 <hr />
